@@ -21,17 +21,17 @@ router.get('/:id_activity', (req, res) => {
     .catch(err => res.status(404).json({ msg: 'there is no activity with this id' }))
 });
 
-// @route GET /api/activities/:id_user
+// @route GET /api/activities/user/:id_user
 // @desc Get activities from a specific user (public)
-router.get('/:id_user', (req, res) => {
+router.get('/user/:id_user', (req, res) => {
   Activity.find({ createdBy: req.params.id_user })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no activitites for this user found' }))
 });
 
-// @route GET /api/activities/:category
+// @route GET /api/activities/category/:category
 // @desc Get activities from a specific category (public)
-router.get('/:category', (req, res) => {
+router.get('/category/:category', (req, res) => {
   Activity.find({ category: req.params.category })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no activitites for this category found' }))
@@ -43,9 +43,7 @@ router.post('/', (req, res) => {
   const { errors, isValid } = validateActivityInput(req.body);
 
   // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+  if (!isValid) return res.status(400).json(errors);
 
   const participants = req.body.participants ? req.body.participants : [];
 
@@ -82,9 +80,7 @@ router.put('/:id', (req, res) => {
   const { errors, isValid } = validateActivityInput(req.body);
 
   // Check validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+  if (!isValid) return res.status(400).json(errors);
 
   Activity.findOneAndUpdate(
     { _id: req.params.id} ,
@@ -104,27 +100,30 @@ router.put('/:id', (req, res) => {
     },
     { new: true },
   )
-    .then(info => {
-      res.json(info)
-    })
+    .then(info => res.json(info))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 
-// @route UPDATE /api/activities/:id
-// @desc Update activity (public)
-router.patch('/:id', (req, res) => {
+// @route UPDATE /api/activities/add_participant/:id_activity/:id_user
+// @desc Update activity, add participant (public)
+router.patch('/add_participant/:id_activity/:id_user', (req, res) => {
   Activity.findOneAndUpdate(
-    { _id: req.params.id} ,
-    {
-      $push: {
-        participants: [req.body.participants]
-      },
-    },
+    { _id: req.params.id_activity } ,
+    { $push: { participants: [req.params.id_user] }, },
     { new: true },
   )
-    .then(info => {
-      res.json(info)
-    })
+    .then(info => res.json(info))
+    .catch(err => res.status(400).json({ msg: 'update failed' }));
+});
+
+// @route UPDATE /api/activities/delete_participant/:id_activity/:id_user
+// @desc Update activity, delete participant (public)
+router.patch('/delete_participant/:id_activity/:id_user', (req, res) => {
+  Activity.updateOne(
+    { _id: req.params.id_activity },
+    { $pullAll: { participants: [req.params.id_user] } }
+  )
+    .then(() => res.json({ success: true }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 

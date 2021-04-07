@@ -21,7 +21,6 @@ app.use(express.json());
 const db = require('./config/keys').mongoURI;
 
 // initializes our database using the credentials
-//mongoose.set('useFindAndModify', false);    // ?????
 mongoose
   .connect(
     db,

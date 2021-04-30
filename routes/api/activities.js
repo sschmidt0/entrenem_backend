@@ -83,7 +83,7 @@ router.put('/:id', (req, res) => {
   if (!isValid) return res.status(400).json(errors);
 
   Activity.findOneAndUpdate(
-    { _id: req.params.id} ,
+    { _id: req.params.id } ,
     {
       $set: {
         category: req.body.category,

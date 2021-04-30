@@ -7,14 +7,12 @@ const keys = require('../../config/keys');
 // MongoDB Model
 const User = require('../../models/User');
 
-// VALIDATION Import
-//const { credentialValidaton } = require('../../utils/validation');
-
 // Load input validation
 const validateRegisterInput = require('../../validate/validateRegisterInput');
 const validateLoginInput = require('../../validate/validateLoginInput');
 
-// Register User
+// @route POST /api/users/registrar --> register user
+// @desc Post user (public)
 router.post('/registrar', (req, res) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -46,6 +44,9 @@ router.post('/registrar', (req, res) => {
   });
 });
 
+
+// @route POST /api/users/iniciar --> login user
+// @desc Post user (public)
 router.post('/iniciar', (req, res) => {
   // Form validation
   const { errors, isValid } = validateLoginInput(req.body);
@@ -56,7 +57,7 @@ router.post('/iniciar', (req, res) => {
   // Find user by email
   User.findOne({ email: req.body.email }).then(user => {
     // Check if user exists
-    if (!user) return res.status(404).json({ emailnotfound: "No hi ha cap usuari amb aquest correu" });
+    if (!user) return res.status(404).json({ email: "No hi ha cap usuari amb aquest correu" });
 
     // Check password
     bcrypt.compare(req.body.password, user.password).then(isMatch => {
@@ -83,10 +84,31 @@ router.post('/iniciar', (req, res) => {
           }
         );
       } else {
-        return res.status(400).json({ passwordincorrect: "Paraula de pas no és correcta" });
+        return res.status(400).json({ password: "Paraula de pas no és correcta" });
       }
     });
   });
 });
+
+// @route DELETE /api/users
+// @desc Delete user (public)
+router.delete('/:id_user', (req, res) => {
+  User.findOneAndDelete({_id: req.params.id})
+    .then(() => { res.json({ success: true })
+    .catch(err => res.json({ msg: 'could not delete user' }))
+  });
+});
+
+// // @route UPDATE /api/users/:id_user
+// // @desc Update password from user (public)
+// router.patch('/update/:id_user', (req, res) => {
+//   Activity.findOneAndUpdate(
+//     { _id: req.params.id_activity } ,
+//     { $set: { password: req.body.password } },
+//     { new: true },
+//   )
+//     .then(info => res.json(info))
+//     .catch(err => res.status(400).json({ msg: 'update failed' }));
+// });
 
 module.exports = router;

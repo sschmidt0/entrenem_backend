@@ -93,22 +93,10 @@ router.post('/iniciar', (req, res) => {
 // @route DELETE /api/users
 // @desc Delete user (public)
 router.delete('/:id_user', (req, res) => {
-  User.findOneAndDelete({_id: req.params.id})
+  User.findOneAndDelete({_id: req.params.id_user})
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete user' }))
   });
 });
-
-// // @route UPDATE /api/users/:id_user
-// // @desc Update password from user (public)
-// router.patch('/update/:id_user', (req, res) => {
-//   Activity.findOneAndUpdate(
-//     { _id: req.params.id_activity } ,
-//     { $set: { password: req.body.password } },
-//     { new: true },
-//   )
-//     .then(info => res.json(info))
-//     .catch(err => res.status(400).json({ msg: 'update failed' }));
-// });
 
 module.exports = router;

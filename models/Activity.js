@@ -23,6 +23,10 @@ const ActivitySchema = new Schema({
     type: String,
     required: true
   },
+  longPlace: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true

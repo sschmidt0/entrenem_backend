@@ -28,6 +28,8 @@ module.exports = function validateActivityInput(data) {
   if (Validator.isEmpty(data.lat)) errors.lat = "Falta la lat del lloc";
   if (Validator.isEmpty(data.lng)) errors.lng = "Falta la lng del lloc";
 
+  if (new Date(data.date).getTime() < Date.now()) errors.date = "El dia seleccionat no és vàlid";
+
   return {
     errors,
     isValid: isEmpty(errors)

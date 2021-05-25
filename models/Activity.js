@@ -40,7 +40,7 @@ const ActivitySchema = new Schema({
     required: true
   },
   participants: {
-    type: [String]
+    type: [Mixed]
   },
   lat: {
     type: String,

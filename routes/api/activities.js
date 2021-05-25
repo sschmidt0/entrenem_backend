@@ -110,10 +110,10 @@ router.put('/:id', (req, res) => {
 
 // @route UPDATE /api/activities/add_participant/:id_activity/:id_user
 // @desc Update activity, add participant (public)
-router.patch('/add_participant/:id_activity/:id_user', (req, res) => {
+router.patch('/add_participant/:id_activity/:id_user/:user_name', (req, res) => {
   Activity.findOneAndUpdate(
     { _id: req.params.id_activity } ,
-    { $push: { participants: [req.params.id_user] }, },
+    { $push: { participants: [{ 'participantId': req.params.id_user, 'participantName': req.params.user_name } ] }, },
     { new: true },
   )
     .then(info => res.json(info))

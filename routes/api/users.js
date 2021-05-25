@@ -25,7 +25,7 @@ router.post('/registrar', (req, res) => {
       return res.status(400).json({ email: "El correu electrònic ja existeix" });
     } else {
       const newUser = new User({
-        name: req.body.fullName,
+        fullName: req.body.fullName,
         email: req.body.email,
         password: req.body.password
       });

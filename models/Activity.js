@@ -35,6 +35,10 @@ const ActivitySchema = new Schema({
     type: String,
     required: true
   },
+  createdByName: {
+    type: String,
+    required: true
+  },
   participants: {
     type: [String]
   },

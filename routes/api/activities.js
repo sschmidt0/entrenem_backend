@@ -56,6 +56,7 @@ router.post('/', (req, res) => {
     longPlace: req.body.longPlace,
     description: req.body.description,
     createdBy: req.body.createdBy,
+    createdByName: req.body.createdByName,
     participants: participants,
     lat: req.body.lat,
     lng: req.body.lng,
@@ -95,6 +96,7 @@ router.put('/:id', (req, res) => {
         longPlace: req.body.longPlace,
         description: req.body.description,
         createdBy: req.body.createdBy,
+        createdByName: req.body.createdByName,
         participants: req.body.participants,
         lat: req.body.lat,
         lng: req.body.lng

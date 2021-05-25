@@ -13,6 +13,7 @@ module.exports = function validateActivityInput(data) {
   data.longPlace = !isEmpty(data.longPlace) ? data.longPlace : "";
   data.description = !isEmpty(data.description) ? data.description : "";
   data.createdBy = !isEmpty(data.createdBy) ? data.createdBy : "";
+  data.createdByName = !isEmpty(data.createdByName) ? data.createdByName : "";
   data.lat = !isEmpty(data.lat) ? data.lat : "";
   data.lng = !isEmpty(data.lng) ? data.lng : "";
 
@@ -25,6 +26,7 @@ module.exports = function validateActivityInput(data) {
   if (Validator.isEmpty(data.longPlace)) errors.longPlace = "Eligeix un punt de trobada";
   if (Validator.isEmpty(data.description)) errors.description = "Afegeix una petita descripció";
   if (Validator.isEmpty(data.createdBy)) errors.createdBy = "Falta la ID de l'usuari";
+  if (Validator.isEmpty(data.createdByName)) errors.createdByName = "Falta el nom de l'usuari";
   if (Validator.isEmpty(data.lat)) errors.lat = "Falta la lat del lloc";
   if (Validator.isEmpty(data.lng)) errors.lng = "Falta la lng del lloc";
 

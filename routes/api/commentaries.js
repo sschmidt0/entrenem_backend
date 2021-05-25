@@ -38,6 +38,7 @@ router.post('/', (req, res) => {
   const newCommentary = new Commentary({
     message: req.body.message,
     writtenBy: req.body.writtenBy,
+    writtenByName: req.body.writtenByName,
     activityID: req.body.activityID
   });
   newCommentary.save()

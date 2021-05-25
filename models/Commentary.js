@@ -15,6 +15,10 @@ const CommentarySchema = new Schema({
     type: String,
     required: true
   },
+  writtenByName: {
+    type: String,
+    required: true
+  },
   activityID: {
     type: String,
     required: true

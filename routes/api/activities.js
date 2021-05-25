@@ -113,7 +113,7 @@ router.put('/:id', (req, res) => {
 router.patch('/add_participant/:id_activity/:id_user/:user_name', (req, res) => {
   Activity.findOneAndUpdate(
     { _id: req.params.id_activity } ,
-    { $push: { participants: [{ 'participantId': req.params.id_user, 'participantName': req.params.user_name } ] }, },
+    { $push: { participants: [{ 'participantId': req.params.id_user, 'participantName': req.params.userName } ] }, },
     { new: true },
   )
     .then(info => res.json(info))

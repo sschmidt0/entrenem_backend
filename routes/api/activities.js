@@ -122,10 +122,10 @@ router.patch('/add_participant/:id_activity/:id_user/:user_name', (req, res) => 
 
 // @route UPDATE /api/activities/delete_participant/:id_activity/:id_user
 // @desc Update activity, delete participant (public)
-router.patch('/delete_participant/:id_activity/:id_user', (req, res) => {
+router.patch('/delete_participant/:id_activity/:id_user/:user_name', (req, res) => {
   Activity.updateOne(
     { _id: req.params.id_activity },
-    { $pullAll: { participants: [req.params.id_user] } }
+    { $pullAll: { participants: [ { userId: req.params.id_user, userName: req.params.user_name } ] }, }
   )
     .then(() => res.json({ success: true }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));

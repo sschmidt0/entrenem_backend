@@ -132,3 +132,4 @@ router.patch('/delete_participant/:id_activity/:id_user', (req, res) => {
 });
 
 module.exports = router;
+

@@ -58,8 +58,11 @@ router.post('/', (req, res) => {
     createdBy: req.body.createdBy,
     createdByName: req.body.createdByName,
     participants: participants,
-    lat: req.body.lat,
-    lng: req.body.lng,
+    location: {
+      type: 'Point',
+      coordinates: [ req.body.lat, req.body.lng ],
+      city: req.body.city
+    }
   });
   //res.send(newActivity);
   newActivity.save()
@@ -98,8 +101,10 @@ router.put('/:id', (req, res) => {
         createdBy: req.body.createdBy,
         createdByName: req.body.createdByName,
         participants: req.body.participants,
-        lat: req.body.lat,
-        lng: req.body.lng
+        location: {
+          type: 'Point',
+          coordinates: [ req.body.lat, req.body.lng ]
+        }
       },
     },
     { new: true },

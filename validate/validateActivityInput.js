@@ -16,6 +16,7 @@ module.exports = function validateActivityInput(data) {
   data.createdByName = !isEmpty(data.createdByName) ? data.createdByName : "";
   data.lat = !isEmpty(data.lat) ? data.lat : "";
   data.lng = !isEmpty(data.lng) ? data.lng : "";
+  data.city = !isEmpty(data.city) ? data.city : "";
 
   // Checks if fields are empty
   if (Validator.isEmpty(data.category)) errors.category = "Eligeix una categoria";
@@ -29,6 +30,7 @@ module.exports = function validateActivityInput(data) {
   if (Validator.isEmpty(data.createdByName)) errors.createdByName = "Falta el nom de l'usuari";
   if (Validator.isEmpty(data.lat)) errors.lat = "Falta la lat del lloc";
   if (Validator.isEmpty(data.lng)) errors.lng = "Falta la lng del lloc";
+  if (Validator.isEmpty(data.city)) errors.city = "Falta la ciutat";
 
   if (new Date(data.date).getTime() < Date.now()) errors.date = "El dia seleccionat no és vàlid";
 

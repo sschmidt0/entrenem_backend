@@ -42,14 +42,20 @@ const ActivitySchema = new Schema({
   participants: {
     type: Array,
   },
-  lat: {
-    type: String,
-    required: true
-  },
-  lng: {
-    type: String,
-    required: true
-  },
+  location: {
+    type: {
+      type: String,
+      required: true
+    },
+    coordinates: {
+      type: Array,
+      required: true
+    },
+    city: {
+      type: String,
+      required: true
+    }
+  }
 });
 
 module.exports = Activity = mongoose.model('activity', ActivitySchema);

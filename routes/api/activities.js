@@ -55,7 +55,7 @@ router.get('/categories/:category', (req, res) => {
 
 // @route GET /api/activities/:id_activity
 // @desc Get a specific activity (public)
-router.get('/:id_activity', (req, res) => {
+router.get('/:activityId', (req, res) => {
   Activity.find({ _id: req.params.id_activity })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'there is no activity with this id' }))
@@ -63,7 +63,7 @@ router.get('/:id_activity', (req, res) => {
 
 // @route GET /api/activities/user/:id_user
 // @desc Get activities from a specific user (public)
-router.get('/user/:id_user', (req, res) => {
+router.get('/user/:userId', (req, res) => {
   Activity.find({ createdBy: req.params.id_user })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no activitites for this user found' }))
@@ -105,7 +105,7 @@ router.post('/', (req, res) => {
 
 // @route DELETE /api/activities
 // @desc Delete activity (public)
-router.delete('/:id', (req, res) => {
+router.delete('/:activityId', (req, res) => {
   Activity.findOneAndDelete({_id: req.params.id})
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete entry' }))
@@ -114,7 +114,7 @@ router.delete('/:id', (req, res) => {
 
 // @route UPDATE /api/activities/:id
 // @desc Update activity (public)
-router.patch('/:id', (req, res) => {
+router.patch('/:activityId', (req, res) => {
   const { errors, isValid } = validateActivityInput(req.body);
 
   // Check validation
@@ -150,7 +150,7 @@ router.patch('/:id', (req, res) => {
 
 // @route UPDATE /api/activities/add_participant/:id_activity/:id_user
 // @desc Update activity, add participant (public)
-router.patch('/add_participant/:id_activity/:id_user/:user_name', (req, res) => {
+router.patch('/add_participant/:activityId/:userId/:userName', (req, res) => {
   Activity.findOneAndUpdate(
     { _id: req.params.id_activity } ,
     { $push: { participants: [ { userId: req.params.id_user, userName: req.params.user_name } ] }, },
@@ -162,7 +162,7 @@ router.patch('/add_participant/:id_activity/:id_user/:user_name', (req, res) => 
 
 // @route UPDATE /api/activities/delete_participant/:id_activity/:id_user
 // @desc Update activity, delete participant (public)
-router.patch('/delete_participant/:id_activity/:id_user/:user_name', (req, res) => {
+router.patch('/delete_participant/:activityId/:userId/:userName', (req, res) => {
   Activity.updateOne(
     { _id: req.params.id_activity },
     { $pullAll: { participants: [ { userId: req.params.id_user, userName: req.params.user_name } ] }, }

@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
 // @route GET /api/commentaries/:id_activity
 // @desc Get commentaries of specific activity (public)
-router.get('/:id_activity', (req, res) => {
+router.get('/:activityId', (req, res) => {
   Commentary.find({ activityID: req.params.id_activity })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no commentaries for this activity found' }))
@@ -21,7 +21,7 @@ router.get('/:id_activity', (req, res) => {
 
 // @route GET /api/commentaries/user/:id_user
 // @desc Get commentaries a user has written (to get activity id) (public)
-router.get('/user/:id_user', (req, res) => {
+router.get('/user/:userId', (req, res) => {
   Commentary.find({ writtenBy: req.params.id_user })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no commentaries for this user found' }))

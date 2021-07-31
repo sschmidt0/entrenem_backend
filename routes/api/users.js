@@ -93,7 +93,7 @@ router.post('/iniciar', (req, res) => {
 
 // @route DELETE /api/users
 // @desc Delete user (public)
-router.delete('/:id_user', (req, res) => {
+router.delete('/:userId', (req, res) => {
   User.findOneAndDelete({_id: req.params.id_user})
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete user' }))

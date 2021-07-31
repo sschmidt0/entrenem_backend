@@ -80,22 +80,7 @@ router.post('/', (req, res) => {
   const participants = req.body.participants ? req.body.participants : [];
 
   const newActivity = new Activity({
-    category: req.body.category,
-    title: req.body.title,
-    dateTime: req.body.dateTime,
-    place: req.body.place,
-    longPlace: req.body.longPlace,
-    city: req.body.city,
-    description: req.body.description,
-    createdBy: req.body.createdBy,
-    createdByName: req.body.createdByName,
-    participants: participants,
-    difficulty: req.body.difficulty,
-    location: {
-      type: 'Point',
-      coordinates: [ req.body.lat, req.body.lng ],
-      city: req.body.city,
-    }
+    ...req.body
   });
   //res.send(newActivity);
   newActivity.save()
@@ -121,25 +106,10 @@ router.patch('/:activityId', (req, res) => {
   if (!isValid) return res.status(400).json(errors);
 
   Activity.findOneAndUpdate(
-    { _id: req.params.id } ,
+    { _id: req.params.activityId } ,
     {
       $set: {
-        category: req.body.category,
-        title: req.body.title,
-        dateTime: req.body.dateTime,
-        place: req.body.place,
-        longPlace: req.body.longPlace,
-        city: req.body.city,
-        description: req.body.description,
-        createdBy: req.body.createdBy,
-        createdByName: req.body.createdByName,
-        participants: req.body.participants,
-        difficulty: req.body.difficulty,
-        location: {
-          type: 'Point',
-          coordinates: [ req.body.lat, req.body.lng ],
-          city: req.body.city,
-        }
+        ...req.body
       },
     },
     { new: true },

@@ -25,9 +25,7 @@ router.post('/registrar', (req, res) => {
       return res.status(400).json({ email: "El correu electrònic ja existeix" });
     } else {
       const newUser = new User({
-        fullName: req.body.fullName,
-        email: req.body.email,
-        password: req.body.password
+        ...req.body
       });
 
       // Hash password before saving in database
@@ -94,7 +92,7 @@ router.post('/iniciar', (req, res) => {
 // @route DELETE /api/users
 // @desc Delete user (public)
 router.delete('/:userId', (req, res) => {
-  User.findOneAndDelete({_id: req.params.id_user})
+  User.findOneAndDelete({_id: req.params.userId})
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete user' }))
   });

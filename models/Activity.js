@@ -11,19 +11,7 @@ const ActivitySchema = new Schema({
     type: String,
     required: true
   },
-  date: {
-    type: String,
-    required: true
-  },
-  time: {
-    type: String,
-    required: true
-  },
-  place: {
-    type: String,
-    required: true
-  },
-  longPlace: {
+  dateTime: {
     type: String,
     required: true
   },
@@ -32,18 +20,36 @@ const ActivitySchema = new Schema({
     required: true
   },
   createdBy: {
-    type: String,
-    required: true
-  },
-  createdByName: {
-    type: String,
-    required: true
+    userId: {
+      type: String,
+      required: true
+    },
+    userName: {
+      type: String,
+      required: true
+    }
   },
   participants: {
     type: Array,
   },
+  difficulty: {
+    type: String,
+    required: true
+  },
   location: {
     type: {
+      type: String,
+      required: true
+    },
+    city: {
+      type: String,
+      required: true
+    },
+    place: {
+      type: String,
+      required: true
+    },
+    longPlace: {
       type: String,
       required: true
     },
@@ -51,10 +57,6 @@ const ActivitySchema = new Schema({
       type: Array,
       required: true
     },
-    city: {
-      type: String,
-      required: true
-    }
   }
 });
 

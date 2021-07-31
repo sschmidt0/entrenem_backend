@@ -11,15 +11,17 @@ const CommentarySchema = new Schema({
     type: Date,
     default: Date.now
   },
-  writtenBy: {
-    type: String,
-    required: true
+  author: {
+    authorId: {
+      type: String,
+      required: true
+    },
+    authorName: {
+      type: String,
+      required: true
+    },
   },
-  writtenByName: {
-    type: String,
-    required: true
-  },
-  activityID: {
+  activityId: {
     type: String,
     required: true
   }

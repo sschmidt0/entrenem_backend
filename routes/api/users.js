@@ -10,6 +10,7 @@ const User = require('../../models/User');
 // Load input validation
 const validateRegisterInput = require('../../validate/validateRegisterInput');
 const validateLoginInput = require('../../validate/validateLoginInput');
+const validateUpdatedUserInput = require('../../validate/validateUpdatedUserInput');
 
 // @route POST /api/users/registrar --> register user
 // @desc Post user (public)
@@ -25,9 +26,7 @@ router.post('/registrar', (req, res) => {
       return res.status(400).json({ email: "El correu electrònic ja existeix" });
     } else {
       const newUser = new User({
-        fullName: req.body.fullName,
-        email: req.body.email,
-        password: req.body.password
+        ...req.body
       });
 
       // Hash password before saving in database
@@ -91,10 +90,31 @@ router.post('/iniciar', (req, res) => {
   });
 });
 
+// @route PATCH /api/users/:userId
+// @desc Update user (public)
+router.patch('/:userId/username', (req, res) => {
+  const { errors, isValid } = validateUpdatedUserInput(req.body);
+
+  // Check validation
+  if (!isValid) return res.status(400).json(errors);
+
+  User.findOneAndUpdate(
+    { _id: req.params.userId } ,
+    {
+      $set: {
+        userName: req.body.userName
+      },
+    },
+    { new: true },
+  )
+    .then(info => res.json({ success: true, info}))
+    .catch(err => res.status(400).json({ msg: 'update failed' }));
+});
+
 // @route DELETE /api/users
 // @desc Delete user (public)
 router.delete('/:userId', (req, res) => {
-  User.findOneAndDelete({_id: req.params.id_user})
+  User.findOneAndDelete({_id: req.params.userId})
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete user' }))
   });

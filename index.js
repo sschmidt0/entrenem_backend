@@ -14,8 +14,8 @@ const app = express();
 // sets up CORS for Cross-Origin-Resource-Sharing
 app.use(cors());
 // converts API responses to JSON for easy use
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // imports our database credentials (stored separately for security)
 const db = require('./config/keys').mongoURI;

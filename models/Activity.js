@@ -1,7 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Create Schema
+
+const GeoSchema = new Schema({
+  type: {
+    type: String,
+    default: "Point",
+  },
+  coordinates: {
+    type: [Number],
+    required: true,
+    index: "2dsphere"
+  }
+});
+
 const ActivitySchema = new Schema({
   category: {
     type: String,
@@ -37,10 +49,9 @@ const ActivitySchema = new Schema({
     required: true
   },
   location: {
-    type: {
-      type: String,
-      required: true
-    },
+    type: GeoSchema
+  },
+  locationDescription: {
     city: {
       type: String,
       required: true
@@ -52,11 +63,7 @@ const ActivitySchema = new Schema({
     longPlace: {
       type: String,
       required: true
-    },
-    coordinates: {
-      type: Array,
-      required: true
-    },
+    }
   }
 });
 

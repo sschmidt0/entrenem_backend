@@ -21,7 +21,7 @@ router.get('/date/:dateTime', (req, res) => {
     .catch(err => res.status(404).json({ msg: 'no activities for this date found' }))
 });
 
-// generic filters
+// generic filters (coordinates, distance, category, difficulty, dateTime)
 router.get('/filters', (req, res) => {
   const lng = req.query.lng ? req.query.lng : 2.078728;
   const lat = req.query.lat ? req.query.lat : 41.3947688;

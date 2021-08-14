@@ -60,7 +60,7 @@ router.patch('/:commentaryId', (req, res) => {
     },
     { new: true },
   )
-    .then(info => res.json(info))
+    .then(info => res.json({ success: true, info }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 

@@ -92,7 +92,7 @@ router.post('/iniciar', (req, res) => {
 
 // @route PATCH /api/users/:userId
 // @desc Update user (public)
-router.patch('/:userId', (req, res) => {
+router.patch('/:userId/username', (req, res) => {
   const { errors, isValid } = validateUpdatedUserInput(req.body);
 
   // Check validation
@@ -107,7 +107,7 @@ router.patch('/:userId', (req, res) => {
     },
     { new: true },
   )
-    .then(info => res.json(info))
+    .then(info => res.json({ success: true, info}))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 

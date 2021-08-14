@@ -13,58 +13,55 @@ router.get('/', (req, res) => {
     .catch(err => res.status(404).json({ msg: 'no activities found' }))
 });
 
-// @route GET /api/activities/:date
-// @desc Get all activities for a specific date (public)
-router.get('/:dateTime', (req, res) => {
+// @route GET /api/activities/:dateTime
+// @desc Get all activities for a specific date or time (public)
+router.get('/date/:dateTime', (req, res) => {
   Activity.find({ dateTime: req.params.dateTime })
     .then(info => res.json(info))
-    .catch(err => res.status(404).json({ msg: 'no activities for this date' }))
+    .catch(err => res.status(404).json({ msg: 'no activities for this date found' }))
 });
 
-// @route GET /api/activities/:user_coords/:distance
-// @desc Get all activities within a specific distance (public)
-router.get('/:user_coords/:distance', (req, res) => {
-  const coords = req.body.user_coords;
-  Activity.find({
-    location: {
-      $near: {
-        $geometry: { type: "Point", coordinates: coords },
-        $maxDistance: req.body.distance
+// generic filters
+router.get('/filters', (req, res) => {
+  const lng = req.query.lng ? req.query.lng : 2.078728;
+  const lat = req.query.lat ? req.query.lat : 41.3947688;
+  const distance = req.query.distance ? req.query.distance : 10000;
+
+  if (req.query.distance) delete req.query.distance;
+  if (req.query.lng) delete req.query.lng;
+  if (req.query.lat) delete req.query.lat;
+
+  Activity.find({ $and: [
+    {
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point" ,
+            coordinates: [parseFloat(lng), parseFloat(lat)]
+          },
+          $maxDistance: parseFloat(distance)
+        }
       }
-    }
-  })
-    .then(info => res.json(info))
-    .catch(err => res.status(404).json({ msg: 'no activities within this distance' }))
+    },
+    { ...req.query }
+  ]})
+  .then(info => res.json(info))
+  .catch(err => res.status(404).json({ msg: 'no activities for the applied filter' }));
 });
 
-// @route GET /api/activities/:difficulty
-// @desc Get all activities of a specific difficulty (public)
-router.get('/:difficulty', (req, res) => {
-  Activity.find({ difficulty: req.params.difficulty })
-    .then(info => res.json(info))
-    .catch(err => res.status(404).json({ msg: 'no activities for this difficulty' }))
-});
 
-// @route GET /api/activities/category/:category
-// @desc Get activities from a specific category (public)
-router.get('/categories/:category', (req, res) => {
-  Activity.find({ category: req.params.category })
-    .then(info => res.json(info))
-    .catch(err => res.status(404).json({ msg: 'no activitites for this category found' }))
-});
-
-// @route GET /api/activities/:id_activity
+// @route GET /api/activities/id/:activityId
 // @desc Get a specific activity (public)
-router.get('/:activityId', (req, res) => {
-  Activity.find({ _id: req.params.id_activity })
+router.get('/id/:activityId', (req, res) => {
+  Activity.find({ _id: req.params.activityId })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'there is no activity with this id' }))
 });
 
-// @route GET /api/activities/user/:id_user
+// @route GET /api/activities/user/:userId
 // @desc Get activities from a specific user (public)
 router.get('/user/:userId', (req, res) => {
-  Activity.find({ createdBy: req.params.id_user })
+  Activity.find({ "createdBy.userId": req.params.userId })
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no activitites for this user found' }))
 });
@@ -82,7 +79,6 @@ router.post('/', (req, res) => {
   const newActivity = new Activity({
     ...req.body
   });
-  //res.send(newActivity);
   newActivity.save()
     .then(info => res.json(info))
     .catch(err => console.log(err));
@@ -91,15 +87,15 @@ router.post('/', (req, res) => {
 // @route DELETE /api/activities
 // @desc Delete activity (public)
 router.delete('/:activityId', (req, res) => {
-  Activity.findOneAndDelete({_id: req.params.id})
+  Activity.findOneAndDelete({ _id: req.params.activityId })
     .then(() => { res.json({ success: true })
     .catch(err => res.json({ msg: 'could not delete entry' }))
   });
 });
 
-// @route UPDATE /api/activities/:id
+// @route UPDATE /api/activities/:activityId
 // @desc Update activity (public)
-router.patch('/:activityId', (req, res) => {
+router.put('/:activityId', (req, res) => {
   const { errors, isValid } = validateActivityInput(req.body);
 
   // Check validation
@@ -114,28 +110,29 @@ router.patch('/:activityId', (req, res) => {
     },
     { new: true },
   )
-    .then(info => res.json(info))
+    .then(info => res.json({ success: true, info }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 
-// @route UPDATE /api/activities/add_participant/:id_activity/:id_user
+// @route UPDATE /api/activities/add_participant/:activityId/:userId
 // @desc Update activity, add participant (public)
 router.patch('/add_participant/:activityId/:userId/:userName', (req, res) => {
+
   Activity.findOneAndUpdate(
-    { _id: req.params.id_activity } ,
-    { $push: { participants: [ { userId: req.params.id_user, userName: req.params.user_name } ] }, },
+    { _id: req.params.activityId } ,
+    { $addToSet: { participants: [ { userId: req.params.userId, userName: req.params.userName } ] }, },
     { new: true },
   )
-    .then(info => res.json(info))
+    .then(info => res.json({ success: true, info }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));
 });
 
-// @route UPDATE /api/activities/delete_participant/:id_activity/:id_user
+// @route UPDATE /api/activities/delete_participant/:activityId/:userId/:userName
 // @desc Update activity, delete participant (public)
-router.patch('/delete_participant/:activityId/:userId/:userName', (req, res) => {
+router.patch('/delete_participant/:activityId/:userId', (req, res) => {
   Activity.updateOne(
-    { _id: req.params.id_activity },
-    { $pullAll: { participants: [ { userId: req.params.id_user, userName: req.params.user_name } ] }, }
+    { _id: req.params.activityId },
+    { $pull: { participants: { userId: req.params.userId }} }
   )
     .then(() => res.json({ success: true }))
     .catch(err => res.status(400).json({ msg: 'update failed' }));

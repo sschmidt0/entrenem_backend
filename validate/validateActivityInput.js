@@ -12,9 +12,9 @@ module.exports = function validateActivityInput(data) {
   data.createdBy.userId = !isEmpty(data.createdBy.userId) ? data.createdBy.userId : "";
   data.createdBy.userName = !isEmpty(data.createdBy.userName) ? data.createdBy.userName : "";
   data.difficulty = !isEmpty(data.difficulty) ? data.difficulty : "";
-  data.location.place = !isEmpty(data.location.place) ? data.location.place : "";
-  data.location.longPlace = !isEmpty(data.location.longPlace) ? data.location.longPlace : "";
-  data.location.city = !isEmpty(data.location.city) ? data.location.city : "";
+  data.location.place = !isEmpty(data.locationDescription.place) ? data.locationDescription.place : "";
+  data.location.longPlace = !isEmpty(data.locationDescription.longPlace) ? data.locationDescription.longPlace : "";
+  data.location.city = !isEmpty(data.locationDescription.city) ? data.locationDescription.city : "";
 
   // Checks if fields are empty
   if (Validator.isEmpty(data.category)) errors.category = "Eligeix una categoria";
@@ -24,9 +24,9 @@ module.exports = function validateActivityInput(data) {
   if (Validator.isEmpty(data.createdBy.userId)) errors.createdBy.userId = "Falta la ID de l'usuari";
   if (Validator.isEmpty(data.createdBy.userName)) errors.createdBy.userName = "Falta el nom de l'usuari";
   if (Validator.isEmpty(data.difficulty)) errors.difficulty = "Eligeix un nivell de dificultat";
-  if (Validator.isEmpty(data.location.place)) errors.location.place = "Eligeix un punt de trobada";
-  if (Validator.isEmpty(data.location.longPlace)) errors.location.longPlace = "Eligeix un punt de trobada";
-  if (Validator.isEmpty(data.location.city)) errors.location.city = "Falta la ciutat";
+  if (Validator.isEmpty(data.locationDescription.place)) errors.locationDescription.place = "Eligeix un punt de trobada";
+  if (Validator.isEmpty(data.locationDescription.longPlace)) errors.locationDescription.longPlace = "Eligeix un punt de trobada";
+  if (Validator.isEmpty(data.locationDescription.city)) errors.locationDescription.city = "Falta la ciutat";
 
   if (data.dateTime < new Date()) errors.dateTime = "El dia i hora seleccionats no són vàlids";
 

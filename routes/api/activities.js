@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Activity = require('../../models/Activity');
 const validateActivityInput = require('../../validate/validateActivityInput');
+const moment = require('moment');
+require('moment/locale/ca');
 
 router.get('/test', (req, res) => res.json({ msg: 'backend works' }));
 
@@ -16,7 +18,10 @@ router.get('/', (req, res) => {
 // @route GET /api/activities/:dateTime
 // @desc Get all activities for a specific date or time (public)
 router.get('/date/:dateTime', (req, res) => {
-  Activity.find({ dateTime: req.params.dateTime })
+  const startDay = req.params.dateTime.slice(0, 10);
+  const endDay = moment(req.params.dateTime).add(1, 'days').format().slice(0, 10);
+
+  Activity.find({ dateTime: {$gte: `${startDay}T00:00:00.000Z`, $lt: `${endDay}T00:00:00.000Z`}})
     .then(info => res.json(info))
     .catch(err => res.status(404).json({ msg: 'no activities for this date found' }))
 });
@@ -26,6 +31,14 @@ router.get('/filters', (req, res) => {
   const lng = req.query.lng ? req.query.lng : 2.078728;
   const lat = req.query.lat ? req.query.lat : 41.3947688;
   const distance = req.query.distance ? req.query.distance : 10000;
+
+  if (req.query.dateTime) {
+    const startDay = req.query.dateTime.slice(0, 10);
+    const endDay = moment(req.query.dateTime).add(1, 'days').format().slice(0, 10);
+    console.log('startDay', startDay);
+    console.log('endDay', endDay);
+    req.query.dateTime = { $gte: `${startDay}T00:00:00.000Z`, $lt: `${endDay}T00:00:00.000Z` }
+  }
 
   if (req.query.distance) delete req.query.distance;
   if (req.query.lng) delete req.query.lng;
